@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import { RolandModule } from './roland/roland.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    WinstonModule.forRoot({
+      format: winston.format.simple(),
+      transports: [new winston.transports.Console()],
+    }),
+    RolandModule,
+  ],
 })
 export class AppModule {}

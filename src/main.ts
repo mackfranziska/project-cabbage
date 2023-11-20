@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Transport } from '@nestjs/microservices';
 
-const serviceName = 'nest-grpc';
+const serviceName = 'nest-grpc-server';
 export const port = 5000;
 
 async function bootstrap() {

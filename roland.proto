@@ -2,15 +2,15 @@ syntax = "proto3";
 
 package roland;
 
-service RolandService {
-  rpc AskRoland (AskRolandRequest) returns (AskRolandResponse);
+service RolandBarthesService {
+  rpc AskHim (AskHimRequest) returns (AskHimResponse);
 }
 
-message AskRolandRequest {
+message AskHimRequest {
   string input = 1;
   string name = 2;
 }
 
-message AskRolandResponse {
+message AskHimResponse {
   string output = 1;
 }

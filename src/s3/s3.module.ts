@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { S3Controller } from 'src/s3/s3.controller';
+import { S3Service } from './s3.service';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import { RolandBarthesModule } from './roland-barthes/roland-barthes.module';
 
 @Module({
   imports: [
@@ -9,7 +10,8 @@ import { RolandBarthesModule } from './roland-barthes/roland-barthes.module';
       format: winston.format.simple(),
       transports: [new winston.transports.Console()],
     }),
-    RolandBarthesModule,
   ],
+  providers: [S3Service, S3Controller],
+  exports: [S3Service, S3Controller],
 })
-export class AppModule {}
+export class S3Module {}

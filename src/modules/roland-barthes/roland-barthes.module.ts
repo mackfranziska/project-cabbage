@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { RolandBarthesController } from './roland-barthes.controller';
-import { RolandBarthesService } from './roland-barthes.service';
+import { RolandBarthesController } from './controllers/roland-barthes.controller';
+import { RolandBarthesService } from './services/roland-barthes.service';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { port } from 'src/main';
-import { S3Module } from '../s3/s3.module';
+import { S3Service } from './services/s3.service';
 
 @Module({
   imports: [
@@ -24,9 +24,8 @@ import { S3Module } from '../s3/s3.module';
         },
       },
     ]),
-    S3Module,
   ],
   controllers: [RolandBarthesController],
-  providers: [RolandBarthesService],
+  providers: [RolandBarthesService, S3Service],
 })
 export class RolandBarthesModule {}

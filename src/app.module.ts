@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
-import { RolandBarthesModule } from './roland-barthes/roland-barthes.module';
+import { RolandBarthesModule } from './modules/roland-barthes/roland-barthes.module';
 
 @Module({
   imports: [

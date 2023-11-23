@@ -1,31 +1,25 @@
 import { Body, Controller, Inject } from '@nestjs/common';
-import { RolandBarthesService } from './roland-barthes.service';
+import { RolandBarthesService } from '../services/roland-barthes.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { AskHimRequest, AskHimResponse } from './models';
+import { AskHimRequest, AskHimResponse } from '../models/roland-barthes.models';
 import { GrpcMethod } from '@nestjs/microservices';
-import { S3Controller } from '../s3/s3.controller';
-import { Discourse } from 'src/models';
+import { S3Service } from '../services/s3.service';
+import { createDiscourse } from '../utils/create-discourse.util';
 
 @Controller()
 export class RolandBarthesController {
   constructor(
     private readonly rolandService: RolandBarthesService,
-    private readonly s3Controller: S3Controller,
+    private readonly s3Service: S3Service,
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
   @GrpcMethod('RolandBarthesService', 'AskHim')
   askHim(@Body() request: AskHimRequest): AskHimResponse {
     try {
-      const response = this.rolandService.askHim(request);
-
-      const discourse: Discourse = {
-        name: request.name,
-        input: request.input,
-        output: response.output,
-      };
-      this.s3Controller.saveDiscourse(discourse);
+      const response = this.rolandService.askRoland(request);
+      this.s3Service.saveToS3(createDiscourse(request, response));
 
       return response;
     } catch (error) {

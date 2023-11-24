@@ -8,10 +8,14 @@ dotenv.config();
 const serviceName = 'nest-grpc-server';
 
 async function bootstrap() {
+  const grpcURL = process.env.PORT
+    ? `0.0.0.0:${process.env.PORT}`
+    : `localhost:5000`;
+
   const app = await NestFactory.createMicroservice(AppModule, {
     transport: Transport.GRPC,
     options: {
-      url: process.env.GRPC_URL,
+      url: grpcURL,
       package: process.env.GRPC_PACKAGE,
       protoPath: process.env.GRPC_PROTO_PATH,
     },
@@ -19,8 +23,6 @@ async function bootstrap() {
   const logger = app.get(WINSTON_MODULE_PROVIDER);
   await app.listen();
 
-  logger.info(
-    `Started '${serviceName}', listening on port ${process.env.PORT}...`,
-  );
+  logger.info(`Started '${serviceName}' at: ${grpcURL}`);
 }
 bootstrap();

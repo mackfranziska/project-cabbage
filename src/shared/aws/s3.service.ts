@@ -2,12 +2,12 @@ import _ from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { AwsConfigService } from '../config/aws-config.service';
+import { AwsConfigService } from './aws-config.service';
 import {
   GetObjectCommand,
   ListObjectsCommand,
-  // PutObjectCommand,
-  // PutObjectCommandOutput,
+  PutObjectCommand,
+  PutObjectCommandOutput,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { Response } from 'node-fetch';
@@ -22,23 +22,23 @@ export class S3Service {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
     private readonly awsConfigService: AwsConfigService,
   ) {
-    this.s3 = {} as S3Client; // this.awsConfigService.getS3();
+    this.s3 = this.awsConfigService.getS3();
   }
 
-  async uploadFile(data: object, filePath: string): Promise<void> {
-    // const bufferData = Buffer.from(JSON.stringify(data));
+  async uploadFile(
+    data: object,
+    filePath: string,
+  ): Promise<PutObjectCommandOutput> {
+    const bufferData = Buffer.from(JSON.stringify(data));
 
-    // const putObjectCommand = new PutObjectCommand({
-    //   Bucket: BUCKET_NAME,
-    //   Body: bufferData,
-    //   Key: filePath,
-    // });
+    const putObjectCommand = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Body: bufferData,
+      Key: filePath,
+    });
 
-    this.logger.info(
-      `path: ${BUCKET_NAME}/${filePath}, data: ${JSON.stringify(data)}`,
-    );
-
-    // return this.s3.send(putObjectCommand);
+    this.logger.info(`Saving discourse to: /${filePath}`);
+    return this.s3.send(putObjectCommand);
   }
 
   async getJSON(key: string): Promise<object> {

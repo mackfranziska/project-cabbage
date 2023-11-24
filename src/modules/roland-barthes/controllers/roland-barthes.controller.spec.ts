@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolandBarthesController } from './roland-barthes.controller';
 import { RolandBarthesService } from '../services/roland-barthes.service';
-import { S3Service } from '../../../shared/s3/s3.service';
+import { S3Service } from '../../../shared/aws/s3.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AskHimRequest, AskHimResponse } from '../models/roland-barthes.models';
 

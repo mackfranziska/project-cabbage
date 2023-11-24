@@ -4,7 +4,6 @@ import { AskHimRequest } from '../models/roland-barthes.models';
 @Injectable()
 export class InputValidationPipe implements PipeTransform {
   async transform(request: AskHimRequest) {
-    console.log(request);
     if (isValidInput(request.input) && isValidInput(request.name)) {
       return request;
     } else {

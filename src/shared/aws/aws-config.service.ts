@@ -7,11 +7,11 @@ export class AwsConfigService {
 
   constructor() {
     this.s3 = new S3Client({
+      region: process.env.AWS_REGION,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'test',
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'test',
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
-      region: process.env.AWS_REGION ?? 'us-east-1',
     });
   }
 

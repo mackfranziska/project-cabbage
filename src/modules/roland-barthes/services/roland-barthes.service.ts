@@ -9,7 +9,7 @@ export class RolandBarthesService {
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
   ) {}
 
-  askRoland(@Body() request: AskHimRequest): AskHimResponse {
+  askHim(@Body() request: AskHimRequest): AskHimResponse {
     const { input, name } = request;
 
     // TODO: process input

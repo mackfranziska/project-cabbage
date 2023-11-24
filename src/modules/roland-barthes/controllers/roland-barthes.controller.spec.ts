@@ -1,19 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolandBarthesController } from './roland-barthes.controller';
 import { RolandBarthesService } from '../services/roland-barthes.service';
-import { S3Service } from '../services/s3.service';
+import { S3Service } from '../../../shared/s3/s3.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { createDiscourse } from '../utils/create-discourse.util';
 import { AskHimRequest, AskHimResponse } from '../models/roland-barthes.models';
 
 describe('RolandBarthesController', () => {
   let controller: RolandBarthesController;
 
   const rolandService = {
-    askRoland: jest.fn(),
+    askHim: jest.fn(),
   };
   const s3Service = {
-    saveToS3: jest.fn(),
+    uploadFile: jest.fn(),
   };
 
   const logger = {
@@ -43,9 +42,15 @@ describe('RolandBarthesController', () => {
     controller = module.get<RolandBarthesController>(RolandBarthesController);
   });
 
-  beforeEach(() => rolandService.askRoland.mockClear());
+  beforeEach(() => {
+    rolandService.askHim.mockClear();
+    s3Service.uploadFile.mockClear();
+  });
 
-  const request: AskHimRequest = { input: 'Test, 1 2 3', name: 'Sohee' };
+  const request: AskHimRequest = {
+    input: 'Test, 1 2 3',
+    name: 'Sohee',
+  };
   const response: AskHimResponse = { output: 'It is me, Roland!' };
 
   it('should be defined', () => {
@@ -53,20 +58,18 @@ describe('RolandBarthesController', () => {
   });
 
   describe('askHim', () => {
-    it('should call askHim method of RolandBarthesService and save to S3', async () => {
-      rolandService.askRoland.mockImplementationOnce((req) => {
+    it('should call askRoland method of RolandBarthesService and save to S3', async () => {
+      rolandService.askHim.mockImplementationOnce((req) => {
         expect(req).toMatchObject(request);
         return response;
       });
 
-      const result = await controller.askHim(request);
-      expect(result).toMatchObject(response);
+      const result = await controller.askRoland(request);
 
-      expect(s3Service.saveToS3).toHaveBeenCalledWith(
-        createDiscourse(request, response),
-      );
+      expect(result).toMatchObject(response);
+      expect(s3Service.uploadFile).toHaveBeenCalled();
     });
 
-    // TODO: test error handling
+    // TODO: test errors
   });
 });

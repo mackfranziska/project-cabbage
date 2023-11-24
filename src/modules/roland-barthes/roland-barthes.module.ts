@@ -5,7 +5,8 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { port } from 'src/main';
-import { S3Service } from './services/s3.service';
+import { S3Service } from '../../shared/s3/s3.service';
+import { AwsConfigService } from '../../shared/config/aws-config.service';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { S3Service } from './services/s3.service';
     ]),
   ],
   controllers: [RolandBarthesController],
-  providers: [RolandBarthesService, S3Service],
+  providers: [RolandBarthesService, S3Service, AwsConfigService],
 })
 export class RolandBarthesModule {}

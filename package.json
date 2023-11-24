@@ -2,9 +2,12 @@
   "name": "project-cabbage",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Franziska Mack",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "16.16.0"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

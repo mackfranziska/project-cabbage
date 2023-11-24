@@ -6,7 +6,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 const serviceName = 'nest-grpc-server';
-export const port = 5000;
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
@@ -20,6 +19,8 @@ async function bootstrap() {
   const logger = app.get(WINSTON_MODULE_PROVIDER);
   await app.listen();
 
-  logger.info(`Started '${serviceName}', listening on port ${port}...`);
+  logger.info(
+    `Started '${serviceName}', listening on port ${process.env.PORT}...`,
+  );
 }
 bootstrap();

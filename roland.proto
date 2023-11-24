@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package roland;
+
+service RolandBarthesService {
+  rpc AskHim (AskHimRequest) returns (AskHimResponse);
+}
+
+message AskHimRequest {
+  string input = 1;
+  string name = 2;
+}
+
+message AskHimResponse {
+  string output = 1;
+}

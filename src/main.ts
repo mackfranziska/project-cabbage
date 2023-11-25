@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Transport } from '@nestjs/microservices';
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 const serviceName = 'nest-grpc-server';
@@ -17,7 +18,7 @@ async function bootstrap() {
     options: {
       url: grpcURL,
       package: process.env.GRPC_PACKAGE,
-      protoPath: process.env.GRPC_PROTO_PATH,
+      protoPath: path.join(__dirname, process.env.GRPC_PROTO_PATH),
     },
   });
   const logger = app.get(WINSTON_MODULE_PROVIDER);

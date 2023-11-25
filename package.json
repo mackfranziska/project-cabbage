@@ -9,7 +9,8 @@
     "node": "16.16.0"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && npm run copy-protofile",
+    "copy-protofile": "cp roland.proto dist/ && echo 'Proto file copied successfully'",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

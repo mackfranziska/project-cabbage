@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolandBarthesController } from './roland-barthes.controller';
-import { RolandBarthesService } from '../services/roland-barthes.service';
-import { S3Service } from '../../../shared/services/s3.service';
+import { RolandBarthesService } from './roland-barthes.service';
+import { S3Service } from '../../shared/services/s3.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { AskHimResponse } from '../models/roland-barthes.models';
-import { AskHimDTO } from '../dto/ask-him.dto';
+import { AskHimResponse } from './models/ask-roland.models';
+import { AskHimDTO } from './dto/ask-him.dto';
 import { BadRequestException } from '@nestjs/common';
 
 describe('RolandBarthesController', () => {

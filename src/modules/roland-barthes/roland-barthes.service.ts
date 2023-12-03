@@ -1,5 +1,5 @@
 import { Body, Inject, Injectable } from '@nestjs/common';
-import { AskHimRequest, AskHimResponse } from '../models/roland-barthes.models';
+import { AskHimRequest, AskHimResponse } from './models/ask-roland.models';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 

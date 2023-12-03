@@ -6,14 +6,14 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common';
-import { RolandBarthesService } from '../services/roland-barthes.service';
+import { RolandBarthesService } from './roland-barthes.service';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
-import { AskHimDTO } from '../dto/ask-him.dto';
-import { S3Service } from '../../../shared/services/s3.service';
-import { createDiscourse } from '../utils/create-discourse.util';
-import { ROLAND_ROUTE_NAME, REQUESTS_DIR } from '../../../shared/constants';
-import { InputValidationPipe } from '../pipes/input-validation.pipe';
+import { AskHimDTO } from './dto/ask-him.dto';
+import { S3Service } from '../../shared/services/s3.service';
+import { createDiscourse } from './utils/create-discourse.util';
+import { ROLAND_ROUTE_NAME, REQUESTS_DIR } from '../../shared/constants';
+import { InputValidationPipe } from './pipes/input-validation.pipe';
 
 @Controller(ROLAND_ROUTE_NAME)
 export class RolandBarthesController {

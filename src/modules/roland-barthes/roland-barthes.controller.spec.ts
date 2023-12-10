@@ -6,6 +6,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { AskHimResponse } from './models/ask-roland.models';
 import { AskHimDTO } from './dto/ask-him.dto';
 import { BadRequestException } from '@nestjs/common';
+import { REQUESTS_DIR } from '../../shared/constants';
 
 describe('RolandBarthesController', () => {
   let controller: RolandBarthesController;
@@ -15,6 +16,8 @@ describe('RolandBarthesController', () => {
   };
   const s3Service = {
     uploadFile: jest.fn(),
+    getAllFilesInFolder: jest.fn(),
+    getFilesInFolderAfterLatest: jest.fn(),
   };
 
   const logger = {
@@ -77,6 +80,64 @@ describe('RolandBarthesController', () => {
 
       expect(rolandService.askHim).toHaveBeenCalledTimes(1);
       expect(s3Service.uploadFile).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getHistory', () => {
+    it('should return the history of discourse', async () => {
+      const discourseHistoryMock = [{}, {}, {}];
+      s3Service.getAllFilesInFolder.mockImplementationOnce(() =>
+        Promise.resolve(discourseHistoryMock),
+      );
+
+      const result = await controller.getHistory();
+
+      expect(result).toEqual(discourseHistoryMock);
+      expect(s3Service.getAllFilesInFolder).toHaveBeenCalledWith(REQUESTS_DIR);
+    });
+
+    it('should propagate errors from S3Service', async () => {
+      s3Service.getAllFilesInFolder.mockImplementationOnce(() =>
+        Promise.reject(new BadRequestException()),
+      );
+
+      await expect(controller.getHistory()).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(s3Service.getAllFilesInFolder).toHaveBeenCalledWith(REQUESTS_DIR);
+    });
+  });
+
+  describe('getLatestDiscourse', () => {
+    const from = 'example.json';
+
+    it('should return the latest discourse', async () => {
+      const latestDiscourseMock = [{}, {}];
+      s3Service.getFilesInFolderAfterLatest.mockImplementationOnce(() =>
+        Promise.resolve(latestDiscourseMock),
+      );
+
+      const result = await controller.getLatestDiscourse(from);
+
+      expect(result).toEqual(latestDiscourseMock);
+      expect(s3Service.getFilesInFolderAfterLatest).toHaveBeenCalledWith(
+        REQUESTS_DIR,
+        `${REQUESTS_DIR}/${from}`,
+      );
+    });
+
+    it('should propagate errors from S3Service', async () => {
+      s3Service.getFilesInFolderAfterLatest.mockImplementationOnce(() =>
+        Promise.reject(new BadRequestException()),
+      );
+
+      await expect(controller.getLatestDiscourse(from)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(s3Service.getFilesInFolderAfterLatest).toHaveBeenCalledWith(
+        REQUESTS_DIR,
+        `${REQUESTS_DIR}/${from}`,
+      );
     });
   });
 });

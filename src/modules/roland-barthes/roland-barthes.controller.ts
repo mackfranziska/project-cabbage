@@ -2,8 +2,10 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Inject,
   Post,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 import { RolandBarthesService } from './roland-barthes.service';
@@ -45,6 +47,36 @@ export class RolandBarthesController {
     } catch (error) {
       this.logger.error(
         'Roland could not process your request:',
+        error.message,
+      );
+      throw new BadRequestException('Roland can not answer right now.');
+    }
+  }
+
+  @Get('history')
+  async getHistory(): Promise<object[]> {
+    try {
+      return await this.s3Service.getAllFilesInFolder(REQUESTS_DIR);
+    } catch (error) {
+      this.logger.error(
+        'Roland could not retrieve the discourse history:',
+        error.message,
+      );
+      throw new BadRequestException('Roland can not answer right now.');
+    }
+  }
+
+  @Get('history/latest')
+  async getLatestDiscourse(@Query('from') from: string): Promise<object[]> {
+    try {
+      const targetFilepath = `${REQUESTS_DIR}/${from}`;
+      return await this.s3Service.getFilesInFolderAfterLatest(
+        REQUESTS_DIR,
+        targetFilepath,
+      );
+    } catch (error) {
+      this.logger.error(
+        'Roland could not retrieve the latest discourse:',
         error.message,
       );
       throw new BadRequestException('Roland can not answer right now.');

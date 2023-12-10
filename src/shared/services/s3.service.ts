@@ -1,11 +1,10 @@
-import _ from 'lodash';
 import { Inject, Injectable } from '@nestjs/common';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { AwsConfigService } from './aws-config.service';
 import {
   GetObjectCommand,
-  ListObjectsCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   PutObjectCommandOutput,
   S3Client,
@@ -57,14 +56,34 @@ export class S3Service {
     return this.getFilesByKey(filesPaths);
   }
 
-  private async listFilesInFolder(folderPath: string): Promise<string[]> {
-    const listObjectsCommand = new ListObjectsCommand({
+  async getFilesInFolderAfterLatest(
+    folderPath: string,
+    targetFilepath: string,
+  ): Promise<object[]> {
+    try {
+      const filesPaths: string[] = await this.listFilesInFolder(
+        folderPath,
+        targetFilepath,
+      );
+      return this.getFilesByKey(filesPaths);
+    } catch (error) {
+      this.logger.info(`No new files found after ${targetFilepath}`);
+      return [];
+    }
+  }
+
+  private async listFilesInFolder(
+    folderPath: string,
+    lastKey?: string,
+  ): Promise<string[]> {
+    const listObjectsCommand = new ListObjectsV2Command({
       Bucket: BUCKET_NAME,
       Delimiter: '/',
       Prefix: `${folderPath}/`,
+      StartAfter: lastKey,
     });
     const result = await this.s3.send(listObjectsCommand);
-    return _.map(result.Contents, (content) => content.Key);
+    return result.Contents.map((content) => content.Key);
   }
 
   private getFilesByKey(keys: string[]): Promise<object[]> {

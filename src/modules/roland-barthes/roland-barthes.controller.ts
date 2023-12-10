@@ -32,10 +32,14 @@ export class RolandBarthesController {
       this.logger.info('Roland has processed your request successfully!');
       this.logger.info(response.output);
 
-      const discourse = createDiscourse(data, response);
-      const filePath = `${REQUESTS_DIR}/${Date.now()}.json`;
+      if (process.env.NODE_ENV === 'production') {
+        const discourse = createDiscourse(data, response);
+        const filePath = `${REQUESTS_DIR}/${Date.now()}.json`;
 
-      await this.s3Service.uploadFile(discourse, filePath);
+        await this.s3Service.uploadFile(discourse, filePath);
+      } else {
+        this.logger.info(`Saving discourse to s3`);
+      }
 
       return Promise.resolve();
     } catch (error) {

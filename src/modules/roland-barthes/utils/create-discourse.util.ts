@@ -1,5 +1,5 @@
 import { Discourse } from '../../../shared/models';
-import { AskHimRequest, AskHimResponse } from '../models/roland-barthes.models';
+import { AskHimRequest, AskHimResponse } from '../models/ask-roland.models';
 
 export function createDiscourse(
   request: AskHimRequest,

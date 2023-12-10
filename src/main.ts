@@ -7,11 +7,8 @@ dotenv.config();
 const httpsServiceName = 'nest-http-server';
 
 async function bootstrap() {
-  const hostName =
-    process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
-
   const app = await NestFactory.create(AppModule);
-  await app.listen(8080, hostName);
+  await app.listen(8080, process.env.HOST || 'localhost');
 
   const logger = app.get(WINSTON_MODULE_PROVIDER);
   logger.info(`Started '${httpsServiceName}' at: ${await app.getUrl()}`);
